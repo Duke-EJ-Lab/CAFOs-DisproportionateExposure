@@ -6,22 +6,24 @@
 
 ******************** hogs exposure ****************************
 import delimited InfoUSA2014_AFO_GEODESIC_5km.csv, clear
-
+*** initial data cleaning
 drop objectid from_x from_y near_x near_y
 rename in_fid Orig_fid
 rename near_fid AFO_id
-** merge with hog info
+** merge with hog info (AFOs_SSLW data include farm information)
 merge n:1 AFO_id using AFOs_SSLW.dta
 keep if _merge == 3
 drop _merge
 save InfoUSA2014_AFO_GEODESIC_5km.dta,replace
 
+
 ******************** Poultry exposure ****************************
 import delimited InfoUSA2014_Poultry_GEODESIC_5km.csv, clear
+*** initial data cleaning
 drop objectid from_x from_y near_x near_y
 rename in_fid Orig_fid
 rename near_fid Poultry_id
-** merge with poultry info
+** merge with poultry info (EWG_Poultry_Final data include farm information)
 merge n:1 Poultry_id using EWG_Poultry_Final.dta
 keep if _merge == 3
 drop _merge
@@ -39,8 +41,11 @@ save InfoUSA2014_Poultry_GEODESIC_5km.dta,replace
 ********* 1km *********
 use InfoUSA2014_AFO_GEODESIC_5km.dta,clear
 ** drop duplicate farms
+* there are a few farms with same (RegulatedActivity AllowableCount NumberOfLagoons LocationLatNum LocationLongNum SSLW FacilityName) and we only keep unique farms in our analyses. 
 drop if AFO_id == 379 | AFO_id == 42 | AFO_id == 2049 | AFO_id == 20 | AFO_id == 380 | AFO_id == 71 | AFO_id == 381 | AFO_id == 2050
+*** only keep farms located within 1km of households
 keep if near_dist <= 1000
+*** calcualte summed attributes (farm counts and SSLW) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen AFO_Cnt_1km = total(Count)
@@ -56,7 +61,9 @@ save InfoUSA2014_AFO_1km.dta,replace
 use InfoUSA2014_AFO_GEODESIC_5km.dta,clear
 ** drop duplicate farms
 drop if AFO_id == 379 | AFO_id == 42 | AFO_id == 2049 | AFO_id == 20 | AFO_id == 380 | AFO_id == 71 | AFO_id == 381 | AFO_id == 2050
+*** only keep farms located within 1-2km of households
 keep if near_dist <= 2000 & near_dist > 1000
+*** calcualte summed attributes (farm counts and SSLW) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen AFO_Cnt_1to2km = total(Count)
@@ -72,7 +79,9 @@ save InfoUSA2014_AFO_1to2km.dta,replace
 use InfoUSA2014_AFO_GEODESIC_5km.dta,clear
 ** drop duplicate farms
 drop if AFO_id == 379 | AFO_id == 42 | AFO_id == 2049 | AFO_id == 20 | AFO_id == 380 | AFO_id == 71 | AFO_id == 381 | AFO_id == 2050
+*** only keep farms located within 2-3km of households
 keep if near_dist <= 3000 & near_dist > 2000
+*** calcualte summed attributes (farm counts and SSLW) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen AFO_Cnt_2to3km = total(Count)
@@ -88,7 +97,9 @@ save InfoUSA2014_AFO_2to3km.dta,replace
 use InfoUSA2014_AFO_GEODESIC_5km.dta,clear
 ** drop duplicate farms
 drop if AFO_id == 379 | AFO_id == 42 | AFO_id == 2049 | AFO_id == 20 | AFO_id == 380 | AFO_id == 71 | AFO_id == 381 | AFO_id == 2050
+*** only keep farms located within 3-4km of households
 keep if near_dist <= 4000 & near_dist > 3000
+*** calcualte summed attributes (farm counts and SSLW) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen AFO_Cnt_3to4km = total(Count)
@@ -104,7 +115,9 @@ save InfoUSA2014_AFO_3to4km.dta,replace
 use InfoUSA2014_AFO_GEODESIC_5km.dta,clear
 ** drop duplicate farms
 drop if AFO_id == 379 | AFO_id == 42 | AFO_id == 2049 | AFO_id == 20 | AFO_id == 380 | AFO_id == 71 | AFO_id == 381 | AFO_id == 2050
+*** only keep farms located within 4-5km of households
 keep if near_dist <= 5000 & near_dist > 4000
+*** calcualte summed attributes (farm counts and SSLW) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen AFO_Cnt_4to5km = total(Count)
@@ -147,7 +160,9 @@ save InfoUSA2014_AFO_AllRingBuffer.dta,replace
 
 ********* 1km *********
 use InfoUSA2014_Poultry_GEODESIC_5km.dta,clear
+*** only keep farms located within 1km of households
 keep if near_dist <= 1000
+*** calcualte summed attributes (farm counts and bird counts) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen Poultry_Cnt_1km = total(Count)
@@ -160,7 +175,9 @@ save InfoUSA2014_Poultry_1km.dta,replace
 
 ********* 1to2km *********
 use InfoUSA2014_Poultry_GEODESIC_5km.dta,clear
+*** only keep farms located within 1-2km of households
 keep if near_dist <= 2000 & near_dist > 1000
+*** calcualte summed attributes (farm counts and bird counts) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen Poultry_Cnt_1to2km = total(Count)
@@ -173,7 +190,9 @@ save InfoUSA2014_Poultry_1to2km.dta,replace
 
 ********* 2to3km *********
 use InfoUSA2014_Poultry_GEODESIC_5km.dta,clear
+*** only keep farms located within 2-3km of households
 keep if near_dist <= 3000 & near_dist > 2000
+*** calcualte summed attributes (farm counts and bird counts) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen Poultry_Cnt_2to3km = total(Count)
@@ -186,7 +205,9 @@ save InfoUSA2014_Poultry_2to3km.dta,replace
 
 ********* 3to4km *********
 use InfoUSA2014_Poultry_GEODESIC_5km.dta,clear
+*** only keep farms located within 3-4km of households
 keep if near_dist <= 4000 & near_dist > 3000
+*** calcualte summed attributes (farm counts and bird counts) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen Poultry_Cnt_3to4km = total(Count)
@@ -199,7 +220,9 @@ save InfoUSA2014_Poultry_3to4km.dta,replace
 
 ********* 4to5km *********
 use InfoUSA2014_Poultry_GEODESIC_5km.dta,clear
+*** only keep farms located within 4-5km of households
 keep if near_dist <= 5000 & near_dist > 4000
+*** calcualte summed attributes (farm counts and bird counts) for each house (Orig_fid)
 gen Count = 1
 sort Orig_fid
 by Orig_fid: egen Poultry_Cnt_4to5km = total(Count)
@@ -232,14 +255,5 @@ replace Poultry_brdcntf_2to3km = 0 if Poultry_brdcntf_2to3km == .
 replace Poultry_brdcntf_3to4km = 0 if Poultry_brdcntf_3to4km == .
 replace Poultry_brdcntf_4to5km = 0 if Poultry_brdcntf_4to5km == .
 save InfoUSA2014_Poultry_AllRingBuffer.dta,replace
-
-
-
-
-
-
-
-
-
 
 
