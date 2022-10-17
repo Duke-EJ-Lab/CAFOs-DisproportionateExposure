@@ -3,19 +3,17 @@ clear all;
 close all;
 clc;
 
+% generate x variable names
 x_race = categorical({'(H=0, P=0)','(H=0, P=1)',...
     '(H=1, P=0)', '(H=1, P=1)'});
 x_race = reordercats(x_race,{'(H=0, P=0)','(H=0, P=1)',...
     '(H=1, P=0)', '(H=1, P=1)'});
 
 
+%% race by water 
+% (import all coefficients from bivariate probit)
 
-
-
-
-%% race by water
-%%%%%%%%%%%%%%%%%%%%%%%%% Low Income %%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%% Low Income %%%%%%%%%%%
 White_Low_00 = 0.61;
 White_Low_01 = 0.11;
 White_Low_10 = 0.09;
@@ -31,8 +29,7 @@ His_Low_01 = 0.12;
 His_Low_10 = 0.11;
 His_Low_11 = 0.27;
 
-%%%%%%%%%%%%%%%%%%%%%%%%% Med Income %%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%% Med Income %%%%%%%%%%%
 White_Med_00 = 0.61;
 White_Med_01 = 0.11;
 White_Med_10 = 0.09;
@@ -49,8 +46,7 @@ His_Med_10 = 0.10;
 His_Med_11 = 0.27;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%% High Income %%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%% High Income %%%%%%%%%%%
 White_High_00 = 0.63;
 White_High_01 = 0.12;
 White_High_10 = 0.07;
@@ -84,10 +80,6 @@ y_raceincome_high = ...
     White_High_01 Black_High_01 His_High_01;...
     White_High_10 Black_High_10 His_High_10;...
    White_High_11 Black_High_11 His_High_11];
-
-
-
-
 
 %% hogs exposure graph
 figure(1)

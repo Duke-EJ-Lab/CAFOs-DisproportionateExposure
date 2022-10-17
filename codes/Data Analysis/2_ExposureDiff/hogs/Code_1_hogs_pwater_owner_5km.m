@@ -22,7 +22,7 @@ data(data.gwater == 1, :) = [];
 % keep owners
 data(data.owner == 0, :) = [];
 %%
-% welfare loss
+% CAFO exposure
 hogs = data.agghogs5km_LargeCAFO;
 poultry = data.aggpoultry5km_LargeCAFO;
 
@@ -35,46 +35,38 @@ n_black = sum(race_B == 1);
 n_his = sum(race_H == 1);
 % other variables
 n = size(data,1);
-
 income = data.family_income/1000;
 owner = data.owner;
-
+% exposure and income by races
 hogs_W = hogs(race_W==1);
 hogs_B = hogs(race_B==1);
 hogs_H = hogs(race_H==1);
-
-poultry_W = poultry(race_W==1);
-poultry_B = poultry(race_B==1);
-poultry_H = poultry(race_H==1);
-
 income_W = income(race_W==1);
 income_B = income(race_B==1);
 income_H = income(race_H==1);
 
-%
+% generate matrix (drop observations in high income)
 W_hogs = [income_W,hogs_W];
 W_hogs(income_W > 220, :) = [];
-
 B_hogs = [income_B,hogs_B];
 B_hogs(income_B > 220, :) = [];
-
 H_hogs = [income_H,hogs_H];
 H_hogs(income_H > 220, :) = [];
 
-% bin_W = unique(income_W);
+% only keep the income bins in all 3 races 
+%(need to calcuatle difference in exposure)
 bin_W = unique(W_hogs(:,1));
 bin_B = unique(B_hogs(:,1));
 bin_H = unique(H_hogs(:,1));
 bin1 = intersect(bin_W,bin_B,'row');
 bin = intersect(bin1,bin_H,'row');
 
-
 % average based on actual data
 average_hogs_W = func_MA_CAFO(bin,W_hogs);
 average_hogs_B = func_MA_CAFO(bin,B_hogs);
 average_hogs_H = func_MA_CAFO(bin,H_hogs);
 
-
+% calcualte exposure differences
 hogs_BW = average_hogs_B - average_hogs_W;
 hogs_HW = average_hogs_H - average_hogs_W;
 
@@ -109,16 +101,15 @@ CI_BW = func_CI95(bin,BW_bootstrap);
 
 
 %% plots
-% https://www.mathworks.com/matlabcentral/answers/443322-fill-the-region-between-two-lines
+% drop observations in high income
 plots_BW = [bin,hogs_BW,CI_BW];
 plots_BW(bin > 180,:)=[];
-
 plots_HW = [bin,hogs_HW,CI_HW];
 plots_HW(bin > 180,:)=[];
 
+% store data
 Pwater_Owner_5km_BW = plots_BW;
 Pwater_Owner_5km_HW = plots_HW;
-
 save('Pwater_Owner_5km_BW.mat',...
     'Pwater_Owner_5km_BW');
 save('Pwater_Owner_5km_HW.mat',...

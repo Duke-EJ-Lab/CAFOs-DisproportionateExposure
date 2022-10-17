@@ -11,6 +11,7 @@ clc;
 % Add Paths to Scripts and Data folders
 addpath('...');
 
+% read all saved data
 load('Gwater_Owner_5km_BW.mat');
 load('Gwater_Owner_5km_HW.mat');
 load('Pwater_Owner_5km_BW.mat');
