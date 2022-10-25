@@ -1,5 +1,15 @@
 # CAFOs-EJ
 
+In the data cleaning, We build a data set that combines information of both swine and poultry farms with detailed household-level demographic micro-data InfoUSA.
+After geocoding InfoUSA and farm data, we first identify the block/block group and community water system for each household. 
+By calculating the distance between InfoUSA household and animal farms, we calculate the aggregated CAFO exposure for each household. 
+We use R package ``wru" to impute individual race/ethnicity. The package utilizes the Bayes’ Rule and use individual surname and geo-location (e.g., census block) to compute the posterior probability of each racial category for any given individual. In this study, we use households' surnames and census block to impute race. 
+
+In the data analysis, we first plot the actual CAFO exposure at each income level for each race and bootstrap the corresponding 95% confidence intervals. 
+In the second panel, we plot the difference in the exposure between minority group and White residents and in the third panel, we show how these differences vary across drinking water sources. 
+In the last part, we calculate the joint probability of being exposed to hog and poultry CAFOs – i.e., being exposed to neither type of CAFO, being exposed to either hogs or poultry, or being exposed to both hogs and poultry. 
+
+
 # Data
 Data sets are publicly available (in https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/data/PublicData):
 -	Census data: 2010 Census Block Group data and 2010 Census Urban Area
