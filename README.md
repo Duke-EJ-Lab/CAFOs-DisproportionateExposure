@@ -1,27 +1,34 @@
-# CAFOs-EJ
+# Disproportionate Exposure to Confined Animal Feeding Operations (CAFOs) in Eastern NC 
 
-In the data cleaning, We build a data set that combines information of both swine and poultry farms with detailed household-level demographic micro-data InfoUSA.
-After geocoding InfoUSA and farm data, we first identify the block/block group and community water system for each household. 
-By calculating the distance between InfoUSA household and animal farms, we calculate the aggregated CAFO exposure for each household. 
-We use R package ``wru" to impute individual race/ethnicity. The package utilizes the Bayes’ Rule and use individual surname and geo-location (e.g., census block) to compute the posterior probability of each racial category for any given individual. In this study, we use households' surnames and census block to impute race. 
+This analysis seeks to investigate the differences in exposure to CAFOs, accounting for race and ethniciy, renter/owner status, and method of access to water in the home for both hog and poultry CAFOs. 
 
-In the data analysis, we first plot the actual CAFO exposure at each income level for each race and bootstrap the corresponding 95% confidence intervals. 
-In the second panel, we plot the difference in the exposure between minority group and White residents and in the third panel, we show how these differences vary across drinking water sources. 
-In the last part, we calculate the joint probability of being exposed to hog and poultry CAFOs – i.e., being exposed to neither type of CAFO, being exposed to either hogs or poultry, or being exposed to both hogs and poultry. 
+In the data cleaning we:
+* geocode InfoUSA and farm data
+* identify water systems for each household
+* find the distance between our InfoUSA households and CAFO's, then calculate the aggregated CAFO exposure for each household by drawing a (3-5km) buffer around each home and calculating the total "steady state live weight" (SSLW) of hog CAFOs and the total bird counts in poultry CAFOs that fall within that buffer. 
+* impute individual race + ethnicity using the `wru` R package. The package uses the individual surnames and census block to compute the posterior probability of each racial category for each individual.
+
+In the data analysis we: 
+* plot actual CAFO exposure at each income level for each race, and bootstrap the 95% confidence intervals
+* plot the difference in exposure between minority and white residents, and show how those differences vary across drinking water sources. 
+* calculate the joint probability of being exposed to hot and poultry CAFOs – i.e., being exposed to neither type of CAFO, being exposed to either hogs or poultry, or being exposed to both hogs and poultry. 
 
 
 # Data
-Data sets are publicly available (in https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/data/PublicData):
--	Census data: 2010 Census Block Group data and 2010 Census Urban Area
--	Hog farm data: animal facility map data are provided by NC DEQ.
--	Community water data are managed by the NC DEQ Division of Water Resources.
 
-Data sets used under Data User Agreement:
--	InfoUSA are accessed  under a use agreement with Duke University.
--	Poultry farm data are accessed under an agreement with Environmental Working Group.
+Publicly available datasets can be found in the [data folder](https://github.com/Duke-EJ-Lab/CAFOs-DisproportionateExposure/tree/main/data/PublicData) of this repo:
+*	Census data: 2010 Census Block Group data and 2010 Census Urban Area
+*	Hog farm data: animal facility map data are provided by NC DEQ.
+*	Community water data are managed by the NC DEQ Division of Water Resources.
 
-# Codes
-The codes are separated into "Data Cleaning" and "Data Analysis" and both are uploaded to https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/codes
+Data sets that were used under Data Use Agreements have example rows in the [Data under DUA](https://github.com/Duke-EJ-Lab/CAFOs-DisproportionateExposure/tree/main/data/Data%20under%20DUA) folder:
+* These are completely made up rows with common names and ID's that don't exist in the data to give a sense of the format of the original data. 
+*	InfoUSA are accessed  under a use agreement with Duke University.
+*	Poultry farm data are accessed under an agreement with Environmental Working Group.
+
+# Code
+
+The code is separated into "Data Cleaning" and "Data Analysis".
 
 ## Data Cleaning:
 - 0_ArcGIS_DataCleaning.docx describes the ArcGIS analyses in this study.
@@ -32,12 +39,10 @@ The codes are separated into "Data Cleaning" and "Data Analysis" and both are up
 
 
 ## Data Analysis:
-- To smooth the plots, we use moving average calculation to average the points at nearby income levels for each income. 
-All codes regarding exposure plots need to use MATLAB codes func_SampleDraw.m, func_MA_CAFO.m, and func_CI95.m.
-- Folder https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/codes/Data%20Analysis/1_ExposurePlots plots the hog/poultry exposure for each race.
-- Folder https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/codes/Data%20Analysis/2_ExposureDiff plots the exposure difference between Black and white, 
-and Hispanics and white.
-- Folder https://github.com/Duke-EJ-Lab/CAFOs-EJ/tree/main/codes/Data%20Analysis/3_BivariateProbit runs the bivariate probit. 
+* To smooth the plots, we use moving average calculation to average the points at nearby income levels for each income. All code used to build exposure plots references the MATLAB files `func_SampleDraw.m`, `func_MA_CAFO.m`, and `func_CI95.m`.
+* The `1_ExposurePlots` folder contains code to plot the hog/poultry exposure for each race.
+* The `2_ExposureDiff` folder contains code that plots the exposure difference for black, hispanic and white populations.
+* The `3_BivariateProbit` folder runs the bivariate probit code. 
 
 
 
